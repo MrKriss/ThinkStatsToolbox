@@ -1,4 +1,6 @@
-"""Base dictionary class inherited by the Hist and Pmf classes. """
+"""Base dictionary class inherited by the Hist and Pmf classes. 
+
+Also holds common utility functions to handle plotting parameters """
 
 import copy
 import math
@@ -8,7 +10,7 @@ from collections import Counter
 
 import numpy as np
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 class _DictWrapper(object):
 
@@ -280,5 +282,29 @@ def _underride_dict(d, **options):
     return d
 
 
+# Plotting functions 
+LEGEND = True
+LOC = 1
 
 
+def config_current_plot(**options):
+    """Configures the current plot with the options dictionay.
+
+    Pulls options out of the option dictionary and passes them to
+    the corresponding pyplot functions.
+    """
+    names = ['title', 'xlabel', 'ylabel', 'xscale', 'yscale',
+             'xticks', 'yticks', 'axis', 'xlim', 'ylim']
+
+    for name in names:
+        if name in options:
+            # Call appropriate function to set property
+            getattr(plt, name)(options[name])
+
+    global LEGEND
+    LEGEND = options.get('legend', LEGEND)
+
+    if LEGEND:
+        global LOC
+        LOC = options.get('loc', LOC)
+        plt.legend(loc=LOC)

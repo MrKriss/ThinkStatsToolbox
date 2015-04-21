@@ -30,7 +30,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .common import UnimplementedMethodException, _underride_dict
+from .common import UnimplementedMethodException, _underride_dict, config_current_plot
 from .config import SEABORN_CONFIG
 
 
@@ -352,11 +352,17 @@ class Cdf(object):
         xs = np.asarray(xs)
         ps = np.asarray(ps)
 
+        # Strip out scale and plotting config kwrds before calling plot
         scale = dict(xscale='linear', yscale='linear')
-
         for s in ['xscale', 'yscale']: 
             if s in options:
                 scale[s] = options.pop(s)
+
+        plot_configs = dict()
+        for n in ['title', 'xlabel', 'ylabel', 'xscale', 'yscale',
+                  'xticks', 'yticks', 'axis', 'xlim', 'ylim']:
+            if n in options:  
+                plot_configs[n] = options.pop(n)
 
         if transform == 'exponential':
             complement = True
@@ -384,10 +390,14 @@ class Cdf(object):
             scale['yscale'] = 'log'
 
         options = _underride_dict(options, label=self.label, linewidth=3)
-        
-        plt.plot(xs, ps, **options)
 
-        return plt.gca(), scale
+        # Plot and configure axes and legend
+        plt.plot(xs, ps, **options)
+        options.update(scale)
+        options.update(plot_configs) 
+        config_current_plot(**options)
+
+        return plt.gca(), scale, {'compliment' : complement}, 
 
 
 # ---------------- #

@@ -9,7 +9,8 @@ import seaborn as sb
 
 from ..common import _underride_dict
 from ..hist import Hist
-from .stats_utils import normal_probability, fit_line
+from .stats_utils import fit_line
+from .data_generators import render_normal_probability
 
 
 def mulitplot(objects, xlab=None, ylab=None, plt_kwds=None, fig_kwds=None):
@@ -59,7 +60,7 @@ def normal_probability_plot(sample, fit_color='0.8', **options):
     fit_color: color string for the fitted line
     options: passed along to Plot
     """
-    xs, ys = normal_probability(sample)
+    xs, ys = render_normal_probability(sample)
 
     arr = np.asarray(sample)
     mean = arr.mean()
@@ -67,10 +68,15 @@ def normal_probability_plot(sample, fit_color='0.8', **options):
 
     fit = fit_line(xs, mean, std)
 
+    fig, ax = plt.subplots()
+
     options = _underride_dict(options, linewidth=3, alpha=0.8)
-    plt.plot(*fit, color=fit_color, label='model', **options)
+    ax.plot(*fit, color=fit_color, label='model', **options)
 
     # Draw a second sample and plot alongside fitted model
-    xs, ys = normal_probability(sample)
-    plt.plot(xs, ys, **options)
+    xs, ys = render_normal_probability(sample)
+    ax.plot(xs, ys, **options)
+
+    return ax 
+
 
