@@ -21,28 +21,6 @@ def cohen_effect_size(group1, group2):
     return d
 
 
-def normal_probability(ys, jitter=0.0):
-    """Generates data for a normal probability plot.
-
-    ys: sequence of values
-    jitter (float) : magnitude of jitter added to the ys 
-
-    returns: 
-        xs, ys : numpy arrays 
-    """
-    n = len(ys)
-    xs = np.random.normal(0, 1, n)
-    xs.sort()
-    
-    if jitter:
-        ys = jitter(ys, jitter)
-    else:
-        ys = np.array(ys)
-    ys.sort()
-
-    return xs, ys
-
-
 def fit_line(xs, inter, slope):
     """Fits a line to the given data.
 
