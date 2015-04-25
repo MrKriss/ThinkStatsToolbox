@@ -32,6 +32,17 @@ class Hist(_DictWrapper):
         else:
             return self.d.get(x, 0)
 
+    def most_freq(self, n=10):
+        """Return the top n most frequently occuring items. """
+
+        vals = sorted(self.items(), key=lambda x: x[1], reverse=True)
+        return vals[:n]
+
+    def least_freq(self, n=10):
+        """Return the top n most frequently occuring items. """
+        vals = sorted(self.items(), key=lambda x: x[1])
+        return vals[:n]
+
     def is_subset(self, other):
         """Checks whether values in this histogram are a subset of values in the given histogram. """
         for val, freq in self.items():
@@ -62,7 +73,7 @@ class Hist(_DictWrapper):
         return hist
 
     def to_pmf(self, label=None):
-        """ Convert to a Probability Mass Function Object """
+        """Convert to a Probability Mass Function Object."""
         from ..core.pmf import Pmf
 
         label = label if label is not None else self.label
