@@ -1,6 +1,6 @@
 """Base dictionary class inherited by the Hist and Pmf classes. 
 
-Also holds common utility functions to handle plotting parameters """
+Also holds shared utility functions to handle plotting parameters """
 
 import copy
 import math
@@ -26,6 +26,7 @@ class _DictWrapper(object):
         # Import other object to refernce here to avoid circular imports 
         from .pdf import Pdf
         from .cdf import Cdf
+        from .hist import Hist
 
         # Common state variables 
         self.label = label if label is not None else '_nolegend_'
@@ -36,10 +37,10 @@ class _DictWrapper(object):
         if obj is None:
             return
 
-        if isinstance(obj, (_DictWrapper, Cdf, Pdf)):
+        if isinstance(obj, (_DictWrapper, Cdf, Pdf, Hist)):
             self.label = label if label is not None else obj.label
 
-        if isinstance(obj, (dict, _DictWrapper, Cdf, Pdf)):
+        if isinstance(obj, (dict, _DictWrapper, Cdf, Pdf, Hist)):
             self.d.update(obj.items())
         elif isinstance(obj, pd.Series):
             self.d.update(obj.value_counts().iteritems())
@@ -170,7 +171,7 @@ class _DictWrapper(object):
 
     def items(self):
         """Get an unsorted sequence of (value, freq/prob) pairs."""
-        return self.d.items()
+        return list(self.d.items())
 
     def render(self, **options):
         """Generate a sequence of points suitable for plotting.
@@ -258,6 +259,7 @@ class _DictWrapper(object):
         return sorted(self.d.items(), reverse=False)[:n]
 
 
+# Helper classes
 class UnimplementedMethodException(Exception):
 
     """Exception if someone calls a method that should be overridden."""
@@ -283,9 +285,6 @@ def _underride_dict(d, **options):
 
 
 # Plotting functions 
-LEGEND = True
-LOC = 1
-
 
 def config_current_plot(**options):
     """Configures the current plot with the options dictionay.
@@ -301,10 +300,6 @@ def config_current_plot(**options):
             # Call appropriate function to set property
             getattr(plt, name)(options[name])
 
-    global LEGEND
-    LEGEND = options.get('legend', LEGEND)
-
-    if LEGEND:
-        global LOC
-        LOC = options.get('loc', LOC)
+    if 'label' in options or options.get('legend', False):
+        LOC = options.get('loc', 'best')
         plt.legend(loc=LOC)

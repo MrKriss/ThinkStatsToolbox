@@ -27,11 +27,11 @@ License: GNU GPLv3 http://www.gnu.org/licenses/gpl.html
 """
 
 # Import the main Classes
-from .hist import Hist
-from .pmf import Pmf
-from .pdf import Pdf
-from .cdf import Cdf
+from .core.hist import Hist
+from .core.pmf import Pmf
+from .core.pdf import Pdf
+from .core.cdf import Cdf
 
 # Import the most usefult functions and utilsinto the main namespace
-from .utils.stats_utils import cohen_effect_size
-from .utils.plot_utils import mulitplot, normal_probability_plot
+from .core.tools import cohen_effect_size
+from .core.plot import mulitplot, normal_probability_plot

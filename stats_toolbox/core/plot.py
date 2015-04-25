@@ -7,10 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sb
 
-from ..common import _underride_dict
-from ..hist import Hist
-from .stats_utils import fit_line
-from .data_generators import render_normal_probability
+from .shared import _underride_dict
+from .hist import Hist
+from .tools import fit_line
+from ..utils.data_generators import render_normal_probability
 
 
 def mulitplot(objects, xlab=None, ylab=None, plt_kwds=None, fig_kwds=None):

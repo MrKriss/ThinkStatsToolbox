@@ -1,4 +1,4 @@
-"""Code for useful stats functions. """
+"""Code for a variety of useful stats functions. """
 
 import numpy as np
 

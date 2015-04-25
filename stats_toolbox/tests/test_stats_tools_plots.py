@@ -1,13 +1,13 @@
 """Test script for plotting functions """
 
 import itertools
-from stats_tools import Cdf, Hist, Pdf, Pmf
 
 import matplotlib.pyplot as plt
-
-from common import _underride_dict
-
 import seaborn as sb
+
+from ..core import Cdf, Hist, Pdf, Pmf
+from ..core.shared import _underride_dict
+
 
 def mulitplot(objects, xlab=None, ylab=None, plt_kwds=None, fig_kwds=None):
     """Plot multiple stats objects on a single plot. 

@@ -13,9 +13,9 @@ from nose.tools import assert_equal, assert_almost_equal, assert_true, assert_li
 from collections import Counter
 import numpy as np
 
-from ..hist import Hist
-from ..pmf import Pmf
-from ..cdf import Cdf
+from ..core.hist import Hist
+from ..core.pmf import Pmf
+from ..core.cdf import Cdf
 
 
 def test_hist():
@@ -32,6 +32,9 @@ def test_hist():
 
     hist2 = Hist('ellessuM rehpotsirhC')
     assert_equal(hist, hist2)
+
+    pmf = hist.to_pmf()
+    assert_almost_equal(pmf.prob('e'), 0.15)
 
 def test_pmf():
     pmf = Pmf('allen')

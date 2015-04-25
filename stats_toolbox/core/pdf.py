@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from .common import UnimplementedMethodException
+from .shared import UnimplementedMethodException
 
 
 class Pdf(object):

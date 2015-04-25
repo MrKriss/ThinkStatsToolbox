@@ -30,8 +30,8 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .common import UnimplementedMethodException, _underride_dict, config_current_plot
-from .config import SEABORN_CONFIG
+from .shared import UnimplementedMethodException, _underride_dict, config_current_plot
+from ..config import SEABORN_CONFIG
 
 
 class Cdf(object):
@@ -56,7 +56,7 @@ class Cdf(object):
         # Dependent imports done here to handle cyclic import 
         from .pdf import Pdf
         from .hist import Hist
-        from .common import _DictWrapper
+        from .shared import _DictWrapper
 
         self.label = label if label is not None else '_nolegend_'
 
@@ -290,7 +290,7 @@ class Cdf(object):
         of significant digits is determined by multiplier.  The
         default is 1000, which keeps log10(1000) = 3 significant digits.
         """
-        # TODO(write this method)
+        # TODO: (write this method)
         raise UnimplementedMethodException()
 
     def render(self, **options):
@@ -360,7 +360,7 @@ class Cdf(object):
 
         plot_configs = dict()
         for n in ['title', 'xlabel', 'ylabel', 'xscale', 'yscale',
-                  'xticks', 'yticks', 'axis', 'xlim', 'ylim']:
+                  'xticks', 'yticks', 'axis', 'xlim', 'ylim', 'legend']:
             if n in options:  
                 plot_configs[n] = options.pop(n)
 
@@ -377,6 +377,8 @@ class Cdf(object):
             ps = [1.0-p for p in ps]
 
         if transform == 'weibull':
+
+            # TESTME: Need to check this transform is correct as it differs from latest version of book 
             xs = np.delete(xs, -1)
             ps = np.delete(ps, -1)
             ps = [-math.log(1.0-p) for p in ps]
@@ -397,17 +399,5 @@ class Cdf(object):
         options.update(plot_configs) 
         config_current_plot(**options)
 
-        return plt.gca(), scale, {'compliment' : complement}, 
-
-
-# ---------------- #
-# Module Functions #
-# ---------------- #
-
-import scipy
-
-def eval_normal_cdf(x, mu=0, sigma=1):
-    """Wrapper for evaluating the CDF of a normal distribution"""
-    return scipy.stats.norm.cdf(x, loc=mu, scale=sigma)
-
+        return plt.gca()
 

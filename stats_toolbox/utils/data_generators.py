@@ -4,8 +4,8 @@
 import numpy as np
 import scipy 
 
-from .stats_utils import jitter
-from ..cdf import Cdf
+from ..core.tools import jitter
+from ..core.cdf import Cdf
 
 # Point Evaluaters
 

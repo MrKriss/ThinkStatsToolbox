@@ -7,8 +7,8 @@ import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .common import _DictWrapper, _underride_dict
-from .config import SEABORN_CONFIG
+from .shared import _DictWrapper, _underride_dict
+from ..config import SEABORN_CONFIG
 
 
 class Pmf(_DictWrapper):
