@@ -7,13 +7,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sb
 
-from .shared import _underride_dict
+from .shared import _underride_dict, config_current_plot
 from .hist import Hist
 from .tools import fit_line
 from ..utils.data_generators import render_normal_probability
 
 
-def mulitplot(objects, xlab=None, ylab=None, plt_kwds=None, fig_kwds=None):
+def mulitplot(objects, plt_kwds=None, fig_kwds=None, **options):
     """Plot multiple stats objects on a single plot.
 
     Plots all objects on a single axes. Legend will reflect the 
@@ -24,6 +24,7 @@ def mulitplot(objects, xlab=None, ylab=None, plt_kwds=None, fig_kwds=None):
       objects (list) : Either Hist, Pmf or Pdf objects.
       plt_kwds (dict) : Dictionary for keyword arguments passed to object.plot()
       fig_kwds (dict) : Dictionary for keyword arguments passed to matplotlib.pyplot.figure()
+      **options : Keyword arguments used for configuring axis, labels, titles.  
 
     Returns:
       fig : the matplotlib figure container for the plot. 
@@ -45,10 +46,8 @@ def mulitplot(objects, xlab=None, ylab=None, plt_kwds=None, fig_kwds=None):
 
         obj.plot(color=next(palette), axes=ax, **plt_kwds)
 
-    if xlab:
-        ax.set_xlabel(xlab)
-    if ylab:
-        ax.set_ylabel(ylab)
+    options = _underride_dict(options, legend=True)
+    config_current_plot(**options)
 
     return fig
 

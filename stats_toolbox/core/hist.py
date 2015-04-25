@@ -44,6 +44,23 @@ class Hist(_DictWrapper):
         for val, freq in other.items():
             self.incr(val, -freq)
 
+    def __sub__(self, other):
+        """Subtracts the values in the given histogram from this histogram."""
+        hist = self.copy()
+        hist.subtract(other)
+        return hist
+
+    def add(self, other):
+        """Add the values in the given histogram to this histogram."""
+        for val, freq in other.items():
+            self.incr(val, +freq)
+
+    def __add__(self, other):
+        """Add the values in the given histogram to this histogram."""
+        hist = self.copy()
+        hist.add(other)
+        return hist
+
     def to_pmf(self, label=None):
         """ Convert to a Probability Mass Function Object """
         from ..core.pmf import Pmf
