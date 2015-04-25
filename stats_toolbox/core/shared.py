@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 class _DictWrapper(object):
 
     """An object that contains a dictionary."""
@@ -167,7 +168,7 @@ class _DictWrapper(object):
         dictionary are the values of the Hist/Pmf, and the
         values of the dictionary are frequencies/probabilities.
         """
-        return self.d.keys()
+        return list(self.d.keys())
 
     def items(self):
         """Get an unsorted sequence of (value, freq/prob) pairs."""

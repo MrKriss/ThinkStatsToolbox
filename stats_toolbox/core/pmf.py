@@ -7,7 +7,7 @@ import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .shared import _DictWrapper, _underride_dict
+from .shared import _DictWrapper, _underride_dict, config_current_plot
 from ..config import SEABORN_CONFIG
 
 
@@ -390,6 +390,13 @@ class Pmf(_DictWrapper):
         sb.set_palette(SEABORN_CONFIG['pallet'])
         sb.set_style(SEABORN_CONFIG['style'])
         
+        # Handle extra parameters parsed to config plot
+        plot_configs = dict()
+        for n in ['title', 'xlabel', 'ylabel', 'xscale', 'yscale',
+                  'xticks', 'yticks', 'axis', 'xlim', 'ylim', 'legend']:
+            if n in options:  
+                plot_configs[n] = options.pop(n)
+
         xs, ys = self.render()
 
         width = options.pop('width', None)
@@ -430,6 +437,7 @@ class Pmf(_DictWrapper):
         options = _underride_dict(options, linewidth=3, alpha=0.8)
 
         ax = plt.plot(pxs, pys, style, **options)
+        config_current_plot(**plot_configs)
 
         return ax
 
