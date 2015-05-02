@@ -66,7 +66,28 @@ def render_normal_cdf(mu, sigma, low, high, n=101):
     returns: numpy arrays (xs, ps)
     """
     xs = np.linspace(low, high, n)
-    ps = stats.norm.cdf(xs, mu, sigma)
+    ps = scipy.stats.norm.cdf(xs, mu, sigma)
+    return xs, ps
+
+def render_lognormal_cdf(mu, sigma, low, high, n=101):
+    """Generates sequences of xs and ps for the CDF of the lognormal distribution.
+    
+    mu: parameter
+    sigma: parameter
+    low: float
+    high: float
+    n: number of points to render
+                
+    Returns: numpy arrays (xs, ps)
+    """
+    xs = np.linspace(low, high, n)
+
+    # example on parametisation: 
+    # if lognorm(mu=10,sigma=3)
+    # then shape=3, loc=0, scale=np.exp(10)
+    # --> scipy.stats.lognorm(sigma, loc=0, scale=np.exp(mu))
+    ps = scipy.stats.lognorm.cdf(xs, sigma, scale=np.exp(mu))
+
     return xs, ps
 
 
