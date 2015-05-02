@@ -34,4 +34,4 @@ from .core.cdf import Cdf
 
 # Import the most usefult functions and utilsinto the main namespace
 from .core.tools import cohen_effect_size
-from .core.plot import mulitplot, normal_probability_plot
+from .core.plot import multiplot, normal_probability_plot

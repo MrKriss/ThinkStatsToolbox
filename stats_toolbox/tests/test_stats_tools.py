@@ -36,6 +36,14 @@ def test_hist():
     pmf = hist.to_pmf()
     assert_almost_equal(pmf.prob('e'), 0.15)
 
+def test_hist_summary_stats():
+    hist1 = Hist(np.repeat(np.arange(0,20,2), np.arange(20,0,-2)))
+    target = np.repeat(np.arange(0,20,2), np.arange(20,0,-2))
+
+    assert_almost_equal(hist1.mean(), target.mean())
+    assert_almost_equal(hist1.std(), target.std())
+    assert_almost_equal(hist1.var(), target.var())
+
 def test_pmf():
     pmf = Pmf('allen')
     # this one might not be a robust test
@@ -161,40 +169,20 @@ def test_cdf():
     assert_almost_equal(cdf.prob(2), 0.6)
     assert_equal(cdf.value(0.6), 2)
 
-    # cdf = thinkstats2.MakeCdfFromItems(pmf.Items())
-    # assert_equal(len(cdf), 4)
-    # assert_almost_equal(cdf.prob(2), 0.6)
-    # assert_equal(cdf.value(0.6), 2)
-
     cdf = Cdf(pmf.d)
     assert_equal(len(cdf), 4)
     assert_almost_equal(cdf.prob(2), 0.6)
     assert_equal(cdf.value(0.6), 2)
-
-    # cdf = thinkstats2.MakeCdfFromDict(pmf.d)
-    # assert_equal(len(cdf), 4)
-    # assert_almost_equal(cdf.prob(2), 0.6)
-    # assert_equal(cdf.value(0.6), 2)
 
     cdf = Cdf(hist)
     assert_equal(len(cdf), 4)
     assert_equal(cdf.prob(2), 0.6)
     assert_equal(cdf.value(0.6), 2)
 
-    # cdf = thinkstats2.MakeCdfFromHist(hist)
-    # assert_equal(len(cdf), 4)
-    # assert_equal(cdf.prob(2), 0.6)
-    # assert_equal(cdf.value(0.6), 2)
-
     cdf = Cdf(t)
     assert_equal(len(cdf), 4)
     assert_equal(cdf.prob(2), 0.6)
     assert_equal(cdf.value(0.6), 2)
-
-    # cdf = thinkstats2.MakeCdfFromList(t)
-    # assert_equal(len(cdf), 4)
-    # assert_equal(cdf.prob(2), 0.6)
-    # assert_equal(cdf.value(0.6), 2)
 
     cdf = Cdf(Counter(t))
     assert_equal(len(cdf), 4)

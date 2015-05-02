@@ -16,7 +16,7 @@ from ..utils.data_generators import render_normal_probability
 from ..config import SEABORN_CONFIG
 
 
-def mulitplot(objects, plt_kwds=None, fig_kwds=None, palette=None, **options):
+def multiplot(objects, plt_kwds=None, fig_kwds=None, palette=None, **options):
     """Plot multiple stats objects on a single plot.
 
     Plots all objects on a single axes. Legend will reflect the 
@@ -39,8 +39,11 @@ def mulitplot(objects, plt_kwds=None, fig_kwds=None, palette=None, **options):
     if fig_kwds is None:
         fig_kwds = dict()
 
-    fig = plt.figure(**fig_kwds)
-    ax = fig.add_subplot(111)
+    if 'axes' in options:
+        ax = options['axes']
+    else:
+        fig = plt.figure(**fig_kwds)
+        ax = fig.add_subplot(111)
 
     if palette is None:
         palette = itertools.cycle(sb.color_palette())
@@ -55,9 +58,9 @@ def mulitplot(objects, plt_kwds=None, fig_kwds=None, palette=None, **options):
         obj.plot(color=next(palette), axes=ax, **plt_kwds)
 
     options = _underride_dict(options, legend=True)
-    config_current_plot(**options)
+    # config_current_plot(**options)
 
-    return fig
+    return ax
 
 
 def normal_probability_plot(samples, labels=None, fit_color='0.7', palette=None, **options):
@@ -87,6 +90,7 @@ def normal_probability_plot(samples, labels=None, fit_color='0.7', palette=None,
         if n in options:
             plot_configs[n] = options.pop(n)
 
+
     # Determine whether samples is a sequence or list of sequences.
     if isinstance(samples, str):
         raise TypeError(
@@ -95,11 +99,14 @@ def normal_probability_plot(samples, labels=None, fit_color='0.7', palette=None,
         raise TypeError(
             'samples argument must be a sequence of numbers or a Cdf object, or a list thereof')
 
-    iters_not_str = [(isinstance(s, Iterable) or isinstance(s, Cdf)) and not isinstance(s, str) for s in samples]
-
-    if not all(iters_not_str):
-        # samples is a single sequence
+    if isinstance(samples[0], (Iterable, Cdf)) and not isinstance(samples[0], str):
+        # assume all contents is are sequences to be plotted. check them all
+        iters_not_str = ((isinstance(s, Iterable) or isinstance(s, Cdf)) and not isinstance(s, str) for s in samples)
+        assert all(iters_not_str), 'itterable sequences cannot be strings'
+    else:
+        # only one sequence of values
         samples = [samples]
+        labels = [labels] if labels is None else labels
 
     # Set colour palette
     if palette is None:
@@ -107,8 +114,13 @@ def normal_probability_plot(samples, labels=None, fit_color='0.7', palette=None,
     else: 
         palette = itertools.cycle(palette) 
 
-    # initialise plot
-    fig, ax = plt.subplots()
+    # Initialise plot
+    if 'axes' in options:
+        axes = options.pop('axes')
+        plt.sca(axes)
+        ax = axes
+    else:
+        fig, ax = plt.subplots()
 
     for idx, obj in enumerate(samples):
 
@@ -134,17 +146,19 @@ def normal_probability_plot(samples, labels=None, fit_color='0.7', palette=None,
                 label = obj.label
             else:
                 label = 'Sample %s' % idx
+        else:
+            label = labels[idx]
 
         options = _underride_dict(options, linewidth=1.5, alpha=0.8)
         xs, ys = render_normal_probability(values)
         ax.plot(xs, ys, color=next(palette), label=label, **options)
 
     # Add labels and title
-    plot_configs = _underride_dict(plot_configs, xlabel='Sample values',
-                                   ylabel='Standard Normal Sample', 
+    plot_configs = _underride_dict(plot_configs, ylabel='Sample values',
+                                   xlabel='Standard Normal Sample', 
                                    title='Normal Probability Plot',
                                    legend=True)
 
     config_current_plot(**plot_configs)
 
-    return fig
+    return ax

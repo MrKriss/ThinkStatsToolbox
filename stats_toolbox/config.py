@@ -15,7 +15,9 @@ SEABORN_CONFIG = {}
 
 # Predefined defaults
 SEABORN_CONFIG['style'] = 'darkgrid'
-SEABORN_CONFIG['context'] = 'talk'
+SEABORN_CONFIG['context'] = {'context': 'notebook', 
+                             'font_scale': 1.3, 
+                             'rc': None}
 SEABORN_CONFIG['pallet'] = 'deep'
 
 # Custom seaborn style 

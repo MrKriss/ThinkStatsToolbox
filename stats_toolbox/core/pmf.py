@@ -386,7 +386,7 @@ class Pmf(_DictWrapper):
         """
         # Initialise seaborn with config file 
         import seaborn as sb
-        sb.set_context(SEABORN_CONFIG['context'])
+        sb.set_context(**SEABORN_CONFIG['context'])
         sb.set_palette(SEABORN_CONFIG['pallet'])
         sb.set_style(SEABORN_CONFIG['style'])
         
@@ -396,6 +396,11 @@ class Pmf(_DictWrapper):
                   'xticks', 'yticks', 'axis', 'xlim', 'ylim', 'legend']:
             if n in options:  
                 plot_configs[n] = options.pop(n)
+
+        # Set axes instance if given
+        if 'axes' in options:  
+            axes = options.pop('axes')
+            plt.sca(axes)
 
         xs, ys = self.render()
 

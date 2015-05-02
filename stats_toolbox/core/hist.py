@@ -2,6 +2,7 @@
 
 import warnings
 
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -34,7 +35,6 @@ class Hist(_DictWrapper):
 
     def most_freq(self, n=10):
         """Return the top n most frequently occuring items. """
-
         vals = sorted(self.items(), key=lambda x: x[1], reverse=True)
         return vals[:n]
 
@@ -42,6 +42,40 @@ class Hist(_DictWrapper):
         """Return the top n most frequently occuring items. """
         vals = sorted(self.items(), key=lambda x: x[1])
         return vals[:n]
+
+    def mean(self):
+        """Calculate the mean of the Histogram."""
+        mean = 0.0
+        for x, f in self.d.items():
+            mean += f * x
+        return mean / self.total()
+
+    def var(self, mu=None):
+        """Computes the variance of the Histogram.
+
+        mu: the point around which the variance is computed;
+                if omitted, computes the mean
+
+        returns: float variance
+        """
+        if mu is None:
+            mu = self.mean()
+
+        var = 0.0
+        for x, f in self.d.items():
+            var += f * (x - mu) ** 2
+        return var / self.total()
+
+    def std(self, mu=None):
+        """Computes the standard deviation of a PMF.
+
+        mu: the point around which the variance is computed;
+                if omitted, computes the mean
+
+        returns: float standard deviation
+        """
+        var = self.var(mu)
+        return math.sqrt(var)
 
     def is_subset(self, other):
         """Checks whether values in this histogram are a subset of values in the given histogram. """
@@ -95,7 +129,7 @@ class Hist(_DictWrapper):
           ax : The matplotlib axies object
         """
         import seaborn as sb
-        sb.set_context(SEABORN_CONFIG['context'])
+        sb.set_context(**SEABORN_CONFIG['context'])
         sb.set_palette(SEABORN_CONFIG['pallet'])
         sb.set_style(SEABORN_CONFIG['style'])
 
@@ -105,6 +139,11 @@ class Hist(_DictWrapper):
                   'xticks', 'yticks', 'axis', 'xlim', 'ylim', 'legend']:
             if n in options:  
                 plot_configs[n] = options.pop(n)
+
+        # Set axes instance if given
+        if 'axes' in options:  
+            axes = options.pop('axes')
+            plt.sca(axes)
 
         # find the minimum distance between adjacent values
         xs, ys = self.render()
@@ -134,7 +173,7 @@ class Hist(_DictWrapper):
             config_current_plot(**plot_configs)
 
         else:
-            # Must generate the full data befor passing to pyplot.hist
+            # Must generate the full data before passing to pyplot.hist
             data = []
             for k, v in self.items():
                 data.extend([k] * v) 
