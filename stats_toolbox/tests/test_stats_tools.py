@@ -15,7 +15,25 @@ from ..core.hist import Hist
 from ..core.pmf import Pmf
 from ..core.cdf import Cdf
 
-from ..core.tools import resample, resample_rows
+from ..core.tools import resample, resample_rows, tim, trimmed_mean, trimmed_var
+
+
+def test_trimed_meanvar():
+    """ Test the trim function + trimmed mean and var """
+
+    t = list(range(100))
+    random.shuffle(t)
+    trimmed = trim(t, p=0.05)
+    n = len(trimmed)
+    assert n == 90
+
+    data = list(range(101)) + [591]
+
+    mean_t = trimmed_mean(data, p=0.01) 
+    var_t = trimmed_var(data, p=0.01)
+    
+    assert abs(mean_t - 50.5) < 0.5 * 10**-7
+    assert abs(var_t - 833.25) < 0.5 * 10**-7
 
 
 def test_resample():
