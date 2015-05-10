@@ -210,6 +210,21 @@ def spearman_corr(xs, ys):
     return pearson_corr(xranks, yranks)
 
 
+def trim(t, p=0.01):
+    """ Trims the largest and smallest elements of t.
+
+    Args:
+        t: sequence of numbers
+        p: fraction of values to trim off each end
+
+    Returns:
+        sequence of values
+    """
+    n = int(p * len(t))
+    t = sorted(t)[n:-n]
+    return t
+
+
 def trimmed_mean(t, p=0.01):
     """Computes the trimmed mean of a sequence of numbers.
 
@@ -242,7 +257,3 @@ def trimmed_var(t, p=0.01):
     t = sorted(t)[n:-n]
     xs = np.asarray(t)
     return xs.var()
-
-
-
-
