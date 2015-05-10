@@ -33,3 +33,23 @@ def clean_fem_preg(df):
 
     return df
 
+def clean_BBRSS_Frame(df):
+    """Recodes BRFSS variables.
+
+    df: DataFrame
+    """
+    # clean age
+    df.age.replace([7, 9], float('NaN'), inplace=True)
+
+    # clean height
+    df.htm3.replace([999], float('NaN'), inplace=True)
+
+    # clean weight
+    df.wtkg2.replace([99999], float('NaN'), inplace=True)
+    df.wtkg2 /= 100.0
+
+    # clean weight a year ago
+    df.wtyrago.replace([7777, 9999], float('NaN'), inplace=True)
+    df['wtyrago'] = df.wtyrago.apply(lambda x: x/2.2 if x < 9000 else x-9000)
+
+
