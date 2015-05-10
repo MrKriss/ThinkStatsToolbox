@@ -3,4 +3,4 @@
 from .hist import Hist
 from .cdf import Cdf
 from .pmf import Pmf
-from .pdf import Pdf
+from .pdf import NormalPdf, ExponentialPdf, EstimatedPdf

@@ -29,7 +29,7 @@ License: GNU GPLv3 http://www.gnu.org/licenses/gpl.html
 # Import the main Classes
 from .core.hist import Hist
 from .core.pmf import Pmf
-from .core.pdf import Pdf
+from .core.pdf import NormalPdf, ExponentialPdf, EstimatedPdf
 from .core.cdf import Cdf
 
 # Import the most usefult functions and utilsinto the main namespace
