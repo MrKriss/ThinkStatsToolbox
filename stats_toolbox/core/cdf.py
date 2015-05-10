@@ -21,6 +21,7 @@ Functions
 License: GNU GPLv3 http://www.gnu.org/licenses/gpl.html
 """
 
+import sys
 import copy
 import bisect
 import random
@@ -342,11 +343,12 @@ class Cdf(object):
           scale : dictionary with the scale options that should be passed to
               Config, Show or Save.
         """
-        # Initialise seaborn with config file 
-        import seaborn as sb
-        sb.set_context(**SEABORN_CONFIG['context'])
-        sb.set_palette(SEABORN_CONFIG['pallet'])
-        sb.set_style(SEABORN_CONFIG['style'])
+        # Initialise seaborn with config file if it is yet to be imported
+        if 'seaborn' not in sys.modules:
+            import seaborn as sb
+            sb.set_context(**SEABORN_CONFIG['context'])
+            sb.set_palette(SEABORN_CONFIG['pallet'])
+            sb.set_style(SEABORN_CONFIG['style'])
 
         xs, ps = self.render()
         xs = np.asarray(xs)

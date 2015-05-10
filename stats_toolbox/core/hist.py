@@ -1,5 +1,6 @@
 """Classes and function to do with the Histogramt data structure. """
 
+import sys
 import warnings
 
 import math
@@ -127,11 +128,13 @@ class Hist(_DictWrapper):
 
         Returns:
           ax : The matplotlib axies object
-        """
-        import seaborn as sb
-        sb.set_context(**SEABORN_CONFIG['context'])
-        sb.set_palette(SEABORN_CONFIG['pallet'])
-        sb.set_style(SEABORN_CONFIG['style'])
+        """        
+        # Initialise seaborn with config file if it is yet to be imported
+        if 'seaborn' not in sys.modules:
+            import seaborn as sb
+            sb.set_context(**SEABORN_CONFIG['context'])
+            sb.set_palette(SEABORN_CONFIG['pallet'])
+            sb.set_style(SEABORN_CONFIG['style'])
 
         # Handle extra parameters parsed to config plot
         plot_configs = dict()

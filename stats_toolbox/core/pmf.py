@@ -1,5 +1,6 @@
 """Probability mass function related Classes and Metods. """
 
+import sys
 import math
 import random 
 import warnings
@@ -34,7 +35,7 @@ class Pmf(_DictWrapper):
             default: value to return if the key is not there
 
         Returns:
-            float probability
+            float probability or list of float probabilities.
         """
         # Check if a list of values of a single value
         if hasattr(x, '__iter__') and not isinstance(x, str):
@@ -384,11 +385,12 @@ class Pmf(_DictWrapper):
         Returns:
             ax : Matplotlib axese object
         """
-        # Initialise seaborn with config file 
-        import seaborn as sb
-        sb.set_context(**SEABORN_CONFIG['context'])
-        sb.set_palette(SEABORN_CONFIG['pallet'])
-        sb.set_style(SEABORN_CONFIG['style'])
+        # Initialise seaborn with config file if it is yet to be imported
+        if 'seaborn' not in sys.modules:
+            import seaborn as sb
+            sb.set_context(**SEABORN_CONFIG['context'])
+            sb.set_palette(SEABORN_CONFIG['pallet'])
+            sb.set_style(SEABORN_CONFIG['style'])
         
         # Handle extra parameters parsed to config plot
         plot_configs = dict()
